@@ -1,0 +1,52 @@
+name: Build and Release Plugin Zip
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set release version
+        id: version
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            RAW_TAG="${GITHUB_REF_NAME}"
+          else
+            RAW_TAG="$(php -r '
+              $contents = file_get_contents("bigseller-region-map-for-woocommerce.php");
+              if (! preg_match("/^ \\* Version:\\s*(.+)$/m", $contents, $matches)) {
+                fwrite(STDERR, "Could not read plugin version from header.\n");
+                exit(1);
+              }
+              echo trim($matches[1]);
+            ')"
+            RAW_TAG="v${RAW_TAG}"
+          fi
+
+          VERSION="${RAW_TAG#v}"
+          echo "raw_tag=${RAW_TAG}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build plugin zip
+        run: |
+          chmod +x scripts/build-release-zip.sh
+          scripts/build-release-zip.sh "${{ steps.version.outputs.version }}"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.raw_tag }}
+          name: BigSeller Region Map for WooCommerce v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: build/bigseller-region-map-for-woocommerce-${{ steps.version.outputs.version }}.zip

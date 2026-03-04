@@ -73,3 +73,29 @@ The plugin does not drop the mapping table on deactivation or removal.
 ## License
 
 Licensed under [GPL v2 or later](https://www.gnu.org/licenses/gpl-2.0.html).
+
+## Releases
+
+This repository includes GitHub Actions automation for packaging a WordPress-installable ZIP and attaching it to a GitHub Release.
+
+### Automated release flow
+
+1. Update the plugin version in `bigseller-region-map-for-woocommerce.php`.
+2. Commit and push your changes.
+3. Create and push a tag such as `v1.0.1`.
+4. GitHub Actions builds `bigseller-region-map-for-woocommerce-1.0.1.zip`.
+5. The workflow creates a GitHub Release and uploads the ZIP as a release asset.
+
+### Local build
+
+To build the same ZIP locally:
+
+```bash
+./scripts/build-release-zip.sh
+```
+
+Or specify a version manually:
+
+```bash
+./scripts/build-release-zip.sh 1.0.1
+```
