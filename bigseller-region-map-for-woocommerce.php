@@ -3,7 +3,7 @@
  * Plugin Name: BigSeller Region Map for WooCommerce
  * Plugin URI:  https://github.com/shaifulborhan/wp-plugin-bigseller-region-map-for-woocommerce
  * Description: Maps WooCommerce order REST API country and state values to BigSeller region labels using a database-backed lookup table. Bundles a Malaysia seed dataset.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Shaiful Borhan
  * Update URI:  https://github.com/shaifulborhan/wp-plugin-bigseller-region-map-for-woocommerce
  * License: GPLv2 or later
